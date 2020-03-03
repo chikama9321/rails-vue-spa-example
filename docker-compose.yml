@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  mysql:
+    build: ./docker/mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/sql:/docker-entrypoint-initdb.d
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD:
+  web:
+    build: 
+      context: ./
+      dockerfile: docker/ruby/Dockerfile
+    tty: true
+    volumes:
+      - .:/web
+    ports:
+      - "3000:3000"
+      - "3035:3035"
+    links:
+      - mysql
